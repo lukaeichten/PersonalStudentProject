@@ -64,7 +64,7 @@ const config: Config = {
                         xslt: true,
                     },
                     editUrl:
-                        'https://github.com/lukaeichten/PersonalStudentProject/tree/master/blog/',
+                        'https://github.com/lukaeichten/PersonalStudentProject/tree/master/docs/',
                     onInlineTags: 'warn',
                     onInlineAuthors: 'warn',
                     onUntruncatedBlogPosts: 'warn',
