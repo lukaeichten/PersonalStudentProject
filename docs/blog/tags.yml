@@ -1,0 +1,9 @@
+dev:
+  label: Project Development
+  permalink: /dev
+  description: All development related posts
+
+psp:
+  label: Personal Student Project
+  permalink: /psp
+  description: Posts related to the Personal Student Project itself

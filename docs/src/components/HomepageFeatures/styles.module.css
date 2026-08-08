@@ -1,0 +1,34 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+}
+
+/*GitHub icon style theming*/
+.themedLight { display: inline-block; }
+.themedDark { display: none; }
+
+[data-theme='dark'] .themedLight { display: none; }
+[data-theme='dark'] .themedDark { display: inline-block; }
+
+/*Color fill theming*/
+.themedFill,
+.themedFill path,
+.themedFill circle,
+.themedFill rect {
+  fill: var(--feature-icon-fill-light, currentColor);
+  transition: fill 0.2s ease;
+}
+
+[data-theme='dark'] .themedFill,
+[data-theme='dark'] .themedFill path,
+[data-theme='dark'] .themedFill circle,
+[data-theme='dark'] .themedFill rect {
+  fill: var(--feature-icon-fill-dark, currentColor);
+}
