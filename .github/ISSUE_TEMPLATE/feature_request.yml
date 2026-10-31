@@ -1,0 +1,56 @@
+name: Feature Request
+description: Suggest a new feature or improvement.
+title: "[Feature]: "
+labels: ["feature request", "triage"]
+assignees:
+  - ByteLuka
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request form!
+  - type: textarea
+    id: general-info
+    attributes:
+      label: General Information
+      description: Please provide a general overview of the feature you're requesting.
+      placeholder: Tell us what you need!
+    validations:
+      required: true
+  - type: textarea
+    id: detailed-description
+    attributes:
+      label: Detailed Description
+      description: Please provide a detailed description of the feature you're requesting. Include any relevant information, such as how it would work, what problem it solves, and any potential challenges or considerations.
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Please describe the use case for this feature. How would it be used in practice?
+      placeholder: Tell us how you would use this feature!
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Please describe any alternative solutions or approaches you've considered for this feature. Why did you choose this particular approach?
+      placeholder: Tell us about any alternatives you've considered!
+    validations:
+      required: false
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Upload screenshots
+      description: If applicable, add screenshots to help explain your idea.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Use this field to add additional information
+    validations:
+      required: false

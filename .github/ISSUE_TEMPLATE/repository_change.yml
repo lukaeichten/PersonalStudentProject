@@ -1,0 +1,40 @@
+name: Repository Change
+description: Suggest a new repository change or improvement (collaborators only).
+title: "[Repository]: "
+labels: ["scope:repository"]
+assignees:
+  - ByteLuka
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this repository change form!
+  - type: textarea
+    id: general-info
+    attributes:
+      label: General Information
+      description: Please provide a general overview of the repository change you're suggesting.
+      placeholder: Tell us what you want to change and why!
+    validations:
+      required: true
+  - type: textarea
+    id: detailed-description
+    attributes:
+      label: Detailed Description
+      description: Please provide a detailed description of the repository change you're suggesting. Include any relevant information, such as what it covers, why it's needed, and any potential impact.
+    validations:
+      required: true
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Upload screenshots
+      description: If applicable, add screenshots to help explain your suggestion.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Use this field to add additional information
+    validations:
+      required: false
