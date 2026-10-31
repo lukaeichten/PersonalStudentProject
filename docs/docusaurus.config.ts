@@ -133,7 +133,7 @@ const config: Config = {
                         },
                         {
                             label: "Dev Docs",
-                            to: '/dev/index',
+                            to: '/dev/',
                         },
                         {
                             label: "Changelog",
