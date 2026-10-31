@@ -1,0 +1,83 @@
+---
+sidebar_position: 2
+title: Workflow
+description: Commit and branching conventions, use of GitHub
+---
+
+# Development Workflow
+
+This page aims to explain what conventions have been set up for this project, but also how those conventions are
+enforced, and what the consequences are of not complying with them.
+In addition to all this, the easiest development workflow will be explained.
+
+## GitHub Issues
+
+GitHub issues are used to organise the work.
+An issue is about planning features, track bugs and crashes, and extend the repository.
+
+GitHub issues should only address one of the following and never several at once:
+- feature planning
+- bugs
+- crashes
+- documentation problems
+- repository extensions
+
+## Commit Conventions
+
+This repository uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+> *Why?* Conventional commits are ideal for project management.
+> The commit messages follow a structured format.
+> The most important information is instantly visible.
+> In addition, [Semantic Versioning](https://semver.org/) is easily supported with this kind of commit message, which
+> will most likely become important in the future.
+
+You are asked to comply with this commit scheme.
+Commits which do not respect the Conventional Commit scheme might break the staging and deployment pipeline in the
+future.
+
+Use commit to encapsulate one change at a time.
+Multiple files can be changed in one commit, but the changes across the different files should originate from the same
+decision.
+
+## Branching conventions
+
+The [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow) branching model is used for this
+repository.
+
+Here is a list of branching conventions:
+- `master` is the only protected branch. It always contains a **stable** version of the repository. Never commit or try
+  to commit to this branch.
+- **Feature branches** are prefixed with `feat/` and are suffixed with a short description of the branch. Use the full
+  or shortened version of the issue title implemented by the branch as suffix.
+- **Fixes** are branched similarly to features. The only difference is that they use the `fix/` prefix. Use the
+  addressed issue title as suffix as well.
+- **Documentation changes** use the `docs/` prefix and end with the issue title or summarise the change if there is no
+  issue.
+- **Repository extensions and changes** are committed into `repo/*` branches.
+
+The intention of the branch must always be clear.
+Do not mix up features, fixes, big repository changes, and more into one branch; instead create several branches and
+commit the changes individually.
+Except for documentation, always address a GitHub issue with the branch you are creating.
+
+## Workflow
+
+First, look think about what you want to do and if there exists a GitHub issue for this.
+If not, create a GitHub issue first.
+
+Then clone the repository if you have not already done so.
+Fetch the latest changes and update the local copy of the repository.
+After this, create the branch to implement the desired change (follow the
+[branching conventions](#branching-conventions)).
+
+Commit frequently in separated units of work following the [commit conventions](#commit-conventions).
+
+Once you are done, create a pull request on GitHub.
+Target the `master` branch.
+Wait until the changes are approved before merging.
+
+Once the branch has been merged, close the issue and mark it as done.
+Then you can delete the branch.
+
+Now you are done.
