@@ -1,5 +1,3 @@
-# name_of_pr
-
 Relevant issue: #issue_number
 
 ## Description
