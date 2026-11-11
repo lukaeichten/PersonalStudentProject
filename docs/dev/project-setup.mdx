@@ -1,0 +1,184 @@
+---
+sidebar_position: 2
+title: Project Setup
+description: Project setup & how to open the project correctly from existing configuration
+---
+
+# Project Setup
+
+The project is split into 4 different parts:
+- the backend,
+- the frontend,
+- the documentation site,
+- and the repository root.
+
+This page aims to explain what those 4 parts contain, why they were split that way, and what to respect when creating
+and editing files.
+
+Check out the [Tech Stack](./tech-stack.mdx) documentation for more information about how the different technologies
+were chosen.
+
+## Backend
+
+The `/backend` folder contains the backend of the application.
+It is a Spring Boot project built with Gradle (Java 17 toolchain) and is opened as its own IntelliJ IDEA project.
+
+### Contents
+
+All paths are relative to `/backend`.
+
+| Path                                                     | Purpose                                                                                                 | Git     |
+|----------------------------------------------------------|---------------------------------------------------------------------------------------------------------|---------|
+| `src/main/java/io/github/lukaeichten/personalstudentproject/` | Application source code. `PersonalStudentProjectApplication.java` is the Spring Boot entry point.  | Tracked |
+| `src/main/resources/application.properties`              | Spring configuration (application name, later database and server settings).                           | Tracked |
+| `src/main/resources/static/`, `templates/`               | Default Spring folders for static files and server-side templates. Currently empty.                    | Not tracked (empty folders are ignored by Git) |
+| `src/test/java/io/github/lukaeichten/personalstudentproject/` | Tests. `PersonalStudentProjectApplicationTests.java` checks that the application context starts. | Tracked |
+| `build.gradle`                                           | Build script: plugins, Java version, dependencies (Spring Web MVC, Data JPA, Modulith, PostgreSQL, ...). | Tracked |
+| `settings.gradle`                                        | Gradle project name.                                                                                    | Tracked |
+| `gradlew`, `gradlew.bat`                                 | Gradle wrapper scripts for Linux/macOS and Windows. Use these instead of a local Gradle installation.  | Tracked |
+| `gradle/wrapper/`                                        | Gradle wrapper JAR and properties (pins the Gradle version).                                           | Tracked |
+| `compose.yaml`                                           | Docker Compose file for the local PostgreSQL database. Started and stopped automatically by `spring-boot-docker-compose` when the app runs. | Tracked |
+| `.gitattributes`                                         | Line endings: LF for `gradlew`, CRLF for `*.bat`, JARs treated as binary.                              | Tracked |
+| `.gitignore`                                             | Ignore rules for build output and IDE files.                                                            | Tracked |
+| `.idea/`                                                 | IntelliJ IDEA project settings. Only shared settings are tracked, see below.                            | Partially tracked |
+| `PersonalStudentProject.iml`                             | IntelliJ module file, generated from Gradle on import.                                                  | Ignored |
+| `build/`                                                 | Gradle build output (compiled classes, JARs, test reports).                                             | Ignored |
+| `.gradle/`                                               | Local Gradle cache.                                                                                     | Ignored |
+
+### IntelliJ IDEA settings
+
+The `.idea/` folder is shared so everyone gets the same setup when opening `/backend` in IntelliJ IDEA.
+Files that are machine-specific or generated from Gradle are ignored by `.idea/.gitignore`.
+
+| File                                    | Purpose                                                                  | Git     |
+|-----------------------------------------|--------------------------------------------------------------------------|---------|
+| `.name`                                 | Project name shown in IntelliJ.                                          | Tracked |
+| `vcs.xml`                               | Maps the Git repository root (one level above `/backend`).               | Tracked |
+| `copyright/`                            | AGPL-3.0 copyright header profile used for new files.                    | Tracked |
+| `dataSources.xml`                       | Database tool window connection to the local PostgreSQL instance.        | Tracked |
+| `runConfigurations/_backend__bootRun.xml` | `[backend] bootRun` run configuration, starts the app via Gradle.      | Tracked |
+| `.gitignore`                            | Ignore rules for the files below.                                        | Tracked |
+| `workspace.xml`                         | Personal workspace state (open files, window layout, ...).               | Ignored |
+| `misc.xml`                              | Contains the local JDK name, which differs between machines.             | Ignored |
+| `gradle.xml`, `compiler.xml`, ...       | Generated by IntelliJ on Gradle import.                                  | Ignored |
+| `dataSources.local.xml`, `dataSources/` | Local database credentials and cached schema.                            | Ignored |
+
+When adding files to the backend, keep in mind:
+- Source code goes into `src/main/java` under the `io.github.lukaeichten.personalstudentproject` package, tests into
+  the matching package under `src/test/java`.
+- New files need the AGPL-3.0 copyright header (IntelliJ adds it automatically using the shared copyright profile).
+- Do not commit generated or machine-specific files.
+  If IntelliJ creates a new file in `.idea/`, check whether it is shared configuration or local state before committing
+  it.
+
+## Frontend
+
+The `/frontend` folder contains the frontend of the application.
+It is a React project written in TypeScript, built with Vite and linted with Oxlint.
+The React Compiler is enabled through a Babel plugin.
+It is opened as its own Webstorm project.
+
+### Contents
+
+All paths are relative to `/frontend`.
+
+| Path                                         | Purpose                                                                                   | Git     |
+|----------------------------------------------|-------------------------------------------------------------------------------------------|---------|
+| `src/main.tsx`                               | Entry point. Mounts the `App` component into `index.html`.                                | Tracked |
+| `src/App.tsx`, `src/App.css`                 | Root component and its styles.                                                            | Tracked |
+| `src/index.css`                              | Global styles.                                                                            | Tracked |
+| `src/assets/`                                | Images imported from code (bundled and hashed by Vite).                                   | Tracked |
+| `public/`                                    | Static files served as-is from the site root (favicon, icon sprite).                      | Tracked |
+| `index.html`                                 | HTML page Vite serves and builds from. Loads `src/main.tsx`.                              | Tracked |
+| `package.json`                               | Dependencies and npm scripts: `dev`, `build`, `lint`, `preview`.                          | Tracked |
+| `package-lock.json`                          | Exact installed dependency versions. Commit it whenever `package.json` changes.           | Tracked |
+| `vite.config.ts`                             | Vite configuration (React plugin and React Compiler).                                     | Tracked |
+| `tsconfig.json`                              | Root TypeScript config, references the two configs below.                                 | Tracked |
+| `tsconfig.app.json`                          | TypeScript settings for the app code in `src/`.                                           | Tracked |
+| `tsconfig.node.json`                         | TypeScript settings for tooling files running in Node, such as `vite.config.ts`.          | Tracked |
+| `.oxlintrc.json`                             | Oxlint rules (React, TypeScript).                                                         | Tracked |
+| `README.md`                                  | Default README from the Vite template.                                                    | Tracked |
+| `.gitignore`                                 | Ignore rules for dependencies, build output, logs and editor files.                       | Tracked |
+| `.idea/`                                     | IntelliJ IDEA project settings, see below.                                                | Partially tracked |
+| `node_modules/`                              | Installed dependencies, created by `npm install`.                                         | Ignored |
+| `dist/`                                      | Production build output, created by `npm run build`.                                      | Ignored |
+
+### IntelliJ IDEA settings
+
+| File                                   | Purpose                                                          | Git     |
+|----------------------------------------|------------------------------------------------------------------|---------|
+| `.name`                                | Project name shown in IntelliJ.                                  | Tracked |
+| `vcs.xml`                              | Maps the Git repository root (one level above `/frontend`).      | Tracked |
+| `runConfigurations/_frontend__dev.xml` | `[frontend] dev` run configuration, runs `npm run dev`.          | Tracked |
+| `.gitignore`                           | Ignore rules for the files below.                                | Tracked |
+| `workspace.xml`                        | Personal workspace state.                                        | Ignored |
+| `modules.xml`, `*.iml`                 | Module files, generated by IntelliJ when the project is opened.  | Ignored |
+
+When adding files to the frontend, keep in mind:
+- Code goes into `src/`.
+  Put images used in components into `src/assets/`, and files that need a fixed URL into `public/`.
+- Run `npm run lint` before committing.
+- Always commit `package.json` and `package-lock.json` together.
+
+## Documentation Site
+
+The `/docs` folder contains this documentation site.
+It is built with Docusaurus and published to GitHub Pages under
+[`lukaeichten.github.io/PersonalStudentProject`](https://lukaeichten.github.io/PersonalStudentProject/).
+It is opened as its own Webstorm project.
+
+The site is split into four sections, each with its own content folder:
+
+| Section         | Folder       | URL          | Audience                                            |
+|-----------------|--------------|--------------|-----------------------------------------------------|
+| Docs            | `docs/`      | `/docs`      | Users of the application, e.g. usage guides.        |
+| Dev Docs        | `dev/`       | `/dev`       | Developers working on the project (this page).      |
+| Changelog       | `changelog/` | `/changelog` | Everyone. Changes per release.                      |
+| Blog            | `blog/`      | `/blog`      | Everyone. Project progress posts.                   |
+
+### Contents
+
+All paths are relative to `/docs`.
+
+| Path                         | Purpose                                                                                       | Git     |
+|------------------------------|-----------------------------------------------------------------------------------------------|---------|
+| `docs/`                      | User documentation pages (`.mdx`).                                                            | Tracked |
+| `dev/`                       | Developer documentation pages (`.mdx`). Order is set by `sidebar_position` in the front matter. | Tracked |
+| `changelog/`                 | Changelog pages (`.mdx`).                                                                     | Tracked |
+| `blog/`                      | Blog posts, one folder per post named by date (`YYYY-MM-DD/index.mdx`).                       | Tracked |
+| `blog/authors.yml`           | Blog authors referenced in the post front matter.                                             | Tracked |
+| `blog/tags.yml`              | Predefined blog tags. Tags not listed here cause a build warning.                             | Tracked |
+| `src/pages/`                 | Standalone pages. `index.tsx` is the homepage.                                                | Tracked |
+| `src/components/`            | React components used by pages, e.g. `HomepageFeatures`.                                      | Tracked |
+| `src/css/custom.css`         | Global theme overrides.                                                                       | Tracked |
+| `static/img/`                | Images, logos and favicon, served as-is from `/img`.                                          | Tracked |
+| `static/.nojekyll`           | Tells GitHub Pages not to process the site with Jekyll.                                       | Tracked |
+| `docusaurus.config.ts`       | Site configuration: URL, sections, navbar, footer, theme.                                     | Tracked |
+| `sidebars.ts`                | Sidebar for the Docs section.                                                                 | Tracked |
+| `sidebars-dev.ts`            | Sidebar for the Dev Docs section.                                                             | Tracked |
+| `sidebars-changelog.ts`      | Sidebar for the Changelog section.                                                            | Tracked |
+| `package.json`               | Dependencies and npm scripts: `start`, `build`, `serve`, `typecheck`, ...                     | Tracked |
+| `package-lock.json`          | Exact installed dependency versions. Commit it whenever `package.json` changes.               | Tracked |
+| `tsconfig.json`              | TypeScript configuration, used by `npm run typecheck` and the editor.                         | Tracked |
+| `README.md`                  | How to install, run and build the site locally.                                               | Tracked |
+| `.gitignore`                 | Ignore rules for dependencies, build output and generated files.                              | Tracked |
+| `.idea/`                     | IntelliJ IDEA project settings, see below.                                                    | Partially tracked |
+| `node_modules/`              | Installed dependencies, created by `npm install`.                                             | Ignored |
+| `build/`                     | Static site output, created by `npm run build`.                                               | Ignored |
+| `.docusaurus/`               | Cache and generated files, created by Docusaurus on start and build.                          | Ignored |
+
+### IntelliJ IDEA settings
+
+| File                                | Purpose                                                          | Git     |
+|-------------------------------------|------------------------------------------------------------------|---------|
+| `.name`                             | Project name shown in IntelliJ.                                  | Tracked |
+| `vcs.xml`                           | Maps the Git repository root (one level above `/docs`).          | Tracked |
+| `runConfigurations/_docs__start.xml` | `[docs] start` run configuration, runs `npm run start`.         | Tracked |
+| `.gitignore`                        | Ignore rules for the files below.                                | Tracked |
+| `workspace.xml`                     | Personal workspace state.                                        | Ignored |
+| `modules.xml`, `*.iml`              | Module files, generated by IntelliJ when the project is opened.  | Ignored |
+
+When adding files to the documentation site, keep in mind:
+- Put a page into the folder of the section it belongs to and set `sidebar_position` in its front matter.
+- Use `.mdx` for pages and relative links (e.g. `./tech-stack.mdx`) between pages, so broken links fail the build.
+- Run `npm run build` before committing to check that the site still builds.
