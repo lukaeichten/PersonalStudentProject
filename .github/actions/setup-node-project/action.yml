@@ -1,0 +1,27 @@
+name: Setup Node project
+description: Install Node.js with npm caching and install the project's dependencies via `npm ci`.
+
+inputs:
+  working-directory:
+    description: Directory containing package.json and package-lock.json.
+    required: true
+  node-version:
+    description: Node.js version to install (empty = project default below).
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        # Single source of truth for the project's default Node.js version.
+        node-version: ${{ inputs.node-version || '26.13' }}
+        cache: npm
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci

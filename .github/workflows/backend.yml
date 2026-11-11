@@ -1,0 +1,56 @@
+name: Backend
+
+on:
+  pull_request:
+    paths: &paths
+      - backend/**
+      - .github/workflows/backend.yml
+      - .github/actions/setup-java-gradle/**
+  push:
+    branches:
+      - master
+    paths: *paths
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    # Database for the Spring context in tests (mirrors backend/compose.yaml).
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: personalstudentproject
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d personalstudentproject"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/personalstudentproject
+      SPRING_DATASOURCE_USERNAME: ci
+      SPRING_DATASOURCE_PASSWORD: ci
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-java-gradle
+
+      - name: Build & test
+        run: ./gradlew build

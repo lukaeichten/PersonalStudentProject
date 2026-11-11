@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 title: Workflow
 description: Commit and branching conventions, use of GitHub
 ---
@@ -22,7 +22,7 @@ GitHub issues should only address one of the following and never several at once
 - documentation problems
 - repository extensions
 
-# #GitHub Milestones
+## GitHub Milestones
 
 [GitHub milestones](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones) are
 used to organise to progress of the project.
@@ -34,7 +34,7 @@ provides a section about
 Each
 [high level milestone from section 12.2](https://github.com/lukaeichten/PersonalStudentProject/blob/master/SPECIFICATION.md#122-high-level-milestones)
 should be a GitHub milestone.
-This allows the linking of issues and PRs with those milestones so the progress and *self-made* deadlinesl can be
+This allows the linking of issues and PRs with those milestones so the progress and *self-made* deadlines can be
 tracked more easily.
 
 ## Commit Conventions
@@ -90,6 +90,7 @@ Commit frequently in separated units of work following the [commit conventions](
 
 Once you are done, create a pull request on GitHub and fill in the pull request template.
 Target the `master` branch.
+The [CI/CD workflows](./ci-cd.mdx) build and test the changed parts of the project; they must pass before merging.
 Wait until the changes are approved before merging.
 
 Once the branch has been merged, close the issue and mark it as done.
