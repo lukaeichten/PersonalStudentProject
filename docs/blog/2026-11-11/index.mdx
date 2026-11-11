@@ -1,0 +1,31 @@
+---
+slug: tech-stack-and-scaffold
+title: Tech stack decided & project scaffolded
+authors: [lukaeichten]
+tags: [psp, dev]
+---
+
+Hello again.
+As promised last time, the project scaffold is here.
+With this, the first milestone *Tech stack decided & project scaffolded* is completed.
+
+The milestone was planned for the beginning of October, so the project is still about a month behind.
+The next milestone is the database schema and the multi-tenant architecture.
+
+{/* truncate */}
+
+In the last few days, I decided on the tech stack of the project.
+The backend will be implemented in Java with Spring Boot and will use PostgreSQL as database.
+The frontend will be implemented in TypeScript with React, Vite, and Tailwind CSS.
+A dedicated documentation entry explains which technologies were chosen and why.
+
+After that, I scaffolded the project.
+The repository is now split into 4 parts: the backend, the frontend, the documentation site, and the repository root.
+Each part can be opened as its own IntelliJ IDEA project with shared run configurations.
+The local PostgreSQL database runs in a Docker container which starts automatically with the backend.
+The new project setup documentation explains what each part contains and how to open it correctly.
+
+Finally, I set up the CI/CD with GitHub Actions.
+There is now one workflow per part of the project, which builds and tests only the parts that have changed.
+The documentation site is still deployed to GitHub Pages on `master`.
+How the workflows work and how to extend them is explained in the new CI/CD documentation.
