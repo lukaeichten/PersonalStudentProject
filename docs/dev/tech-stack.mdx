@@ -61,3 +61,38 @@ Docusaurus is used to generate the documentation site as a static GitHub pages s
 This setup is well-supported by GitHub.
 It allows for easy documentation as Markdown files and can also be used to create a blog, which is used to keep track of
 the development progress.
+
+## Deployment
+
+The backend will be shipped as a Docker container.
+
+PostgreSQL provides a Docker image that can be used to run the database in a Docker container.
+
+For the frontend, multiple options are available:
+- build the frontend as a static site and use a hosting provider to host the static files
+  > This depends on the hosting provider and the features they provide.
+  > This approach has the disadvantage that it becomes more difficult for other companies to host the frontend
+  > themselves, as they would need to set up a hosting provider and configure it to serve the static files.
+- build the frontend as a static site and use a Docker container to serve the static files
+  > This approach has the advantage that it is easier for other companies to host the frontend themselves, as they would
+  > only need to set up a hosting provider and configure it to run the Docker container.
+- run the frontend as a Docker container based on NodeJS and use a hosting provider to host the Docker container
+  > This approach has the advantage that it is easier for other companies to host the frontend themselves, as they would
+  > only need to set up a hosting provider and configure it to run the Docker container.
+  > The disadvantage is that it requires more resources to run a Docker container than to serve static files.
+
+The second approach is the best and most flexible option.
+
+The three Docker containers (backend, database, and frontend) will be orchestrated using Kubernetes.
+A development environment will be set up in the future.
+This hardly depends on the hosting provider and the features they provide (e.g., managed Kubernetes, VMs).
+
+### GitHub Actions
+
+A few GitHub Actions are required:
+- build and dockerize the backend and frontend
+- create a release and tag the repository
+- build and push the Docker images to a container registry (e.g., GitHub Container Registry)
+- deploy the Docker containers to the hosting provider (e.g., AWS, Azure, GCP, DigitalOcean)
+- run tests and check code quality
+- run security checks (Dependabot)
