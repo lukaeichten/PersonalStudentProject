@@ -27,6 +27,13 @@ The backend will implement a REST API with CRUD operations.
 > The project sponsor is interested in open-source software, so the decision was made to use Spring Boot as it is more
 > popular and has a larger community, which means more support and resources are available.
 
+The backend will implement the MVC pattern.
+The view layer is the REST API, which will be consumed by the frontend.
+
+Authentication and authorization will be implemented using Spring Security.
+The sponsor is interested in using his Apple ID for authentication, which is explained in this
+[Medium article](https://medium.com/@olalekanamoo128/implementing-apple-authentication-sign-in-with-spring-boot-826e6752bd10).
+
 ## Database
 
 As database management system, PostgreSQL will be used.
@@ -41,7 +48,12 @@ fine-grained access control to the data and could become a crucial part of the m
 ## Frontend
 
 The frontend will be implemented in TypeScript using the React framework.
+
 Vite will be used as the build tool and development server.
+
+Tailwind CSS will be used as the CSS framework.
+It is a modern CSS framework that allows for rapid development of responsive and customizable user interfaces.
+[tailwindcss.com](https://tailwindcss.com/)
 
 ## Documentation
 
