@@ -182,3 +182,44 @@ When adding files to the documentation site, keep in mind:
 - Put a page into the folder of the section it belongs to and set `sidebar_position` in its front matter.
 - Use `.mdx` for pages and relative links (e.g. `./tech-stack.mdx`) between pages, so broken links fail the build.
 - Run `npm run build` before committing to check that the site still builds.
+
+## Repository Root
+
+The repository root holds everything that concerns the project as a whole rather than one of its parts: the licence,
+the project-wide documentation, and the GitHub configuration.
+It is not opened as an IDE project; each part is opened on its own from its folder.
+
+### Contents
+
+All paths are relative to the repository root.
+
+| Path                | Purpose                                                                                      | Git     |
+|---------------------|----------------------------------------------------------------------------------------------|---------|
+| `backend/`          | Backend, see [Backend](#backend).                                                            | Tracked |
+| `frontend/`         | Frontend, see [Frontend](#frontend).                                                         | Tracked |
+| `docs/`             | Documentation site, see [Documentation Site](#documentation-site).                          | Tracked |
+| `.github/`          | GitHub configuration: issue and pull request templates, CI/CD workflows. See below.          | Tracked |
+| `README.md`         | Project overview shown on the GitHub repository page.                                        | Tracked |
+| `SPECIFICATION.md`  | Project specification: requirements, deliverables, and planning.                             | Tracked |
+| `LICENSE`           | Full text of the AGPL-3.0 license.                                                           | Tracked |
+
+### GitHub configuration
+
+All paths are relative to `/.github`.
+
+| Path                       | Purpose                                                                                                   | Git     |
+|----------------------------|-----------------------------------------------------------------------------------------------------------|---------|
+| `ISSUE_TEMPLATE/`          | Issue forms, one per issue type (bug, crash, feature, documentation, repository change).                 | Tracked |
+| `ISSUE_TEMPLATE/config.yml` | Disables blank issues and links to GitHub Discussions for questions.                                    | Tracked |
+| `pull_request_template.md` | Template pre-filled into every new pull request.                                                          | Tracked |
+| `workflows/`               | GitHub Actions workflows. Files prefixed with `_` are reusable workflows. See [CI/CD](./ci-cd.mdx).      | Tracked |
+| `actions/`                 | Composite actions shared by the workflows, one folder per action. See [CI/CD](./ci-cd.mdx).              | Tracked |
+
+When adding files to the repository root, keep in mind:
+- Only put files here that concern the whole project.
+  Anything that belongs to the backend, frontend, or documentation site goes into its folder, including its
+  `.gitignore` and IDE settings.
+- Do not commit a root `.idea/` folder or other IDE files; IDE settings are shared per part.
+- Documentation for developers goes into the [Dev Docs](./index.mdx), not into new Markdown files in the root.
+- When adding an issue type, add an issue form to `ISSUE_TEMPLATE/` and mention it in the
+  [workflow](./workflow.mdx#github-issues) documentation.
