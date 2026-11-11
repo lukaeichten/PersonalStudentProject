@@ -1,0 +1,187 @@
+---
+sidebar_position: 5
+title: CI/CD
+description: GitHub Actions workflows that build, test, and deploy the project
+---
+
+# CI/CD
+
+This page explains how the project is built, tested, and deployed with
+[GitHub Actions](https://docs.github.com/en/actions), and how to extend the setup.
+
+The YAML files in `/.github` are the reference for what each component does and which inputs it accepts.
+Every file starts with a short comment, and every input has a `description`.
+This page explains how the pieces fit together.
+
+## Overview
+
+There is one workflow per part of the project:
+
+| Workflow                                                                                                                | Runs on PRs | Runs on `master` | What it does                                         |
+|-------------------------------------------------------------------------------------------------------------------------|-------------|------------------|--------------------------------------------------------------------------------|
+| [`backend.yml`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/workflows/backend.yml)        | Yes         | Yes              | Compiles and tests the backend with `./gradlew build` |
+| [`frontend.yml`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/workflows/frontend.yml)      | Yes         | Yes              | Lints and builds the frontend                        |
+| [`docs.yml`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/workflows/docs.yml)              | Yes         | Yes              | Builds the documentation site; on `master` it is also deployed to GitHub Pages |
+
+A workflow only runs when a file it depends on has changed, see [path filtering](#path-filtering).
+A pull request that only edits documentation therefore only runs the docs workflow.
+
+Pushing new commits to a pull request cancels the run that is still going for the previous commit.
+On `master`, running workflows are never cancelled, so a deployment is never stopped halfway.
+
+## Path filtering
+
+Each workflow lists the files it depends on under `paths:`.
+GitHub only starts the workflow if at least one changed file matches.
+
+```yaml title=".github/workflows/frontend.yml"
+on:
+  pull_request:
+    paths: &paths
+      - frontend/**                              # the project itself
+      - .github/workflows/frontend.yml           # this workflow
+      - .github/workflows/_node-build.yml        # shared workflow it calls
+      - .github/actions/setup-node-project/**    # shared action used by that workflow
+  push:
+    branches:
+      - master
+    paths: *paths
+```
+
+The list is written once and reused for both triggers with a YAML anchor (`&paths`) and alias (`*paths`).
+
+The list contains:
+- the folder of the project,
+- the workflow file itself,
+- **every shared component the workflow uses, directly or indirectly.**
+
+The last point matters: if a shared component changes, all workflows using it run, because the change could break any
+of them.
+
+:::warning
+
+When a workflow starts using a new shared component, add that component to the workflow's `paths:`.
+Otherwise, changes to the component will not be tested by that workflow.
+
+:::
+
+## Shared components
+
+GitHub Actions offers two ways of reusing code, and both are used here:
+- **Composite actions** (`.github/actions/<name>/action.yml`) group several *steps*.
+  They are used inside a job, like any other action.
+- **Reusable workflows** (`.github/workflows/_<name>.yml`, triggered by `workflow_call`) group whole *jobs*.
+  They are called from a job instead of steps.
+
+Reusable workflows must be located directly in `.github/workflows/`.
+They are prefixed with `_` to distinguish them from the workflows that are triggered by events.
+
+| Component                                                                                                                                  | Type              | Purpose                                                                                       |
+|--------------------------------------------------------------------------------------------------------------------------------------------|-------------------|-----------------------------------------------------------------------------------------------|
+| [`setup-node-project`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/actions/setup-node-project/action.yml)     | Composite action  | Installs Node.js with npm caching and runs `npm ci`. Holds the project's default Node.js version. |
+| [`setup-java-gradle`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/actions/setup-java-gradle/action.yml)       | Composite action  | Installs the JDK and sets up Gradle with caching. Holds the project's default Java version.   |
+| [`_node-build.yml`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/workflows/_node-build.yml)                    | Reusable workflow | Builds an npm project, optionally lints it and uploads the build output for GitHub Pages.    |
+| [`_deploy-pages.yml`](https://github.com/lukaeichten/PersonalStudentProject/blob/master/.github/workflows/_deploy-pages.yml)                | Reusable workflow | Deploys an uploaded build output to GitHub Pages.                                             |
+
+> *Why are there no reusable workflows for the backend?*
+> There is only one Gradle project, so a composite action is enough.
+> A `_gradle-build.yml` should be extracted once a second Gradle project exists.
+
+### Build on PRs, deploy on `master`
+
+The docs workflow uses both reusable workflows.
+The build job always runs, while the deploy job is skipped unless the workflow was triggered by a push to `master`:
+
+```yaml title=".github/workflows/docs.yml"
+jobs:
+  build:
+    uses: ./.github/workflows/_node-build.yml
+    with:
+      working-directory: docs
+      fetch-depth: 0 # full history for Docusaurus' "last updated" metadata
+      upload-pages-artifact: ${{ github.event_name == 'push' }}
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/_deploy-pages.yml
+```
+
+This way, a pull request checks that the site builds, and the deployment uses exactly the same build steps.
+
+## Backend database
+
+The backend tests start the full Spring application context, which needs a PostgreSQL database.
+Locally, the database is started by `spring-boot-docker-compose`, but that only works when the application runs, not in
+tests.
+
+The backend workflow therefore starts a PostgreSQL
+[service container](https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers)
+with the same image as `backend/compose.yaml`.
+The application connects to it through the `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, and
+`SPRING_DATASOURCE_PASSWORD` environment variables, which Spring Boot reads instead of `application.properties`.
+The credentials are only used inside the CI run and are not secret.
+
+## How-tos
+
+### Change the Node.js or Java version
+
+Each default version is defined in one place only:
+- **Node.js**: the fallback in `node-version` of `.github/actions/setup-node-project/action.yml`.
+- **Java**: the default of `java-version` in `.github/actions/setup-java-gradle/action.yml`.
+  Keep it in sync with the toolchain version in `backend/build.gradle`.
+
+A single workflow can use a different Node.js version by passing `node-version` to `_node-build.yml`.
+
+### Add a new npm project
+
+Create a workflow that calls `_node-build.yml`:
+
+```yaml title=".github/workflows/my-project.yml"
+name: My Project
+
+on:
+  pull_request:
+    paths: &paths
+      - my-project/**
+      - .github/workflows/my-project.yml
+      - .github/workflows/_node-build.yml
+      - .github/actions/setup-node-project/**
+  push:
+    branches:
+      - master
+    paths: *paths
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    uses: ./.github/workflows/_node-build.yml
+    with:
+      working-directory: my-project
+      lint: true # requires a `lint` script in package.json
+```
+
+See the inputs of `_node-build.yml` for further options, such as a custom build command.
+
+### Add a new shared component
+
+1. Create a composite action in `.github/actions/<name>/action.yml` (for steps) or a reusable workflow in
+   `.github/workflows/_<name>.yml` (for jobs).
+2. Start the file with a short comment explaining what it does, and give every input a `description`.
+3. Add the component to the `paths:` of every workflow using it, see [path filtering](#path-filtering).
+4. Add it to the [shared components](#shared-components) table above.
+
+## Caveats
+
+- **Executable scripts**: Scripts run by a workflow, such as `backend/gradlew`, must be stored as executable in Git.
+  Otherwise, the workflow fails with `Permission denied`.
+  Fix it with `git update-index --chmod=+x <file>`.
