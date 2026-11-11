@@ -1,0 +1,22 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Markdown personal settings
+/markdown.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Ignored default folder with query files
+/queries/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Generated from Gradle on import
+/compiler.xml
+/jarRepositories.xml
+/modules.xml
+/modules/
+/libraries/
+/artifacts/
+/gradle.xml
+# Contains the local JDK name, which differs between machines
+/misc.xml
