@@ -1,0 +1,27 @@
+name: Frontend
+
+on:
+  pull_request:
+    paths: &paths
+      - frontend/**
+      - .github/workflows/frontend.yml
+      - .github/workflows/_node-build.yml
+      - .github/actions/setup-node-project/**
+  push:
+    branches:
+      - master
+    paths: *paths
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    uses: ./.github/workflows/_node-build.yml
+    with:
+      working-directory: frontend
+      lint: true

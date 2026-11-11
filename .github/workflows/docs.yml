@@ -1,0 +1,38 @@
+name: Docs
+
+on:
+  pull_request:
+    paths: &paths
+      - docs/**
+      - .github/workflows/docs.yml
+      - .github/workflows/_node-build.yml
+      - .github/workflows/_deploy-pages.yml
+      - .github/actions/setup-node-project/**
+  push:
+    branches:
+      - master
+    paths: *paths
+
+permissions:
+  contents: read
+
+# Cancel outdated PR runs; on master, let a running deployment finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    uses: ./.github/workflows/_node-build.yml
+    with:
+      working-directory: docs
+      fetch-depth: 0 # full history for Docusaurus' "last updated" metadata
+      upload-pages-artifact: ${{ github.event_name == 'push' }}
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/_deploy-pages.yml

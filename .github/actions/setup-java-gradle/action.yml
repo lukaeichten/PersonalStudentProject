@@ -1,0 +1,24 @@
+name: Setup Java & Gradle
+description: Install a JDK and configure Gradle with dependency and build caching.
+
+inputs:
+  java-version:
+    description: JDK version to install.
+    required: false
+    default: "17"
+  distribution:
+    description: JDK distribution to install.
+    required: false
+    default: temurin
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Java
+      uses: actions/setup-java@v5
+      with:
+        distribution: ${{ inputs.distribution }}
+        java-version: ${{ inputs.java-version }}
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
