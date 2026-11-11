@@ -1,0 +1,51 @@
+---
+sidebar_position: 2
+title: Technology Stack
+description: Programming languages, frameworks, and tools used in this project
+---
+
+# Technology Stack
+
+This site aims to provide an overview of the technology stack used in this project.
+You will find information about the programming languages, frameworks, and tools used in this project, why they were
+chosen, and how they are used.
+
+## Backend
+
+The backend will be implemented in Java using the Spring Boot framework.
+The backend will implement a REST API with CRUD operations.
+
+> *Why Java?* Java is in the top 6 most popular programming languages based on the
+> [GitHub Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/#h-language-choice-has-new-influence)
+> and [GitHub innovations report](https://innovationgraph.github.com/global-metrics/programming-languages).
+
+> **Why Spring Boot?** Spring Boot is a popular framework for building web applications and microservices in Java.
+> The second choice was Micronaut, which is a low-memory, fast, and modular framework for building microservices and
+> serverless applications in Java.
+> Based on the [Netguru Java backend framework comparison](https://www.netguru.com/blog/java-backend-frameworks), Spring
+> Boot is the most popular one.
+> The project sponsor is interested in open-source software, so the decision was made to use Spring Boot as it is more
+> popular and has a larger community, which means more support and resources are available.
+
+## Database
+
+As database management system, PostgreSQL will be used.
+
+> *Why PostgreSQL?* PostgreSQL is a popular choice for web applications and has a large community of developers.
+> The [Stack Overflow Developer Survey 2026](https://survey.stackoverflow.co/2026/technology/data/databases) shows that
+> PostgreSQL is the most popular database management system among developers, with 58% of respondents using it.
+
+[PostgreSQL supports row-level security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html), which allows for
+fine-grained access control to the data and could become a crucial part of the multi-tenant architecture in the future.
+
+## Frontend
+
+The frontend will be implemented in TypeScript using the React framework.
+Vite will be used as the build tool and development server.
+
+## Documentation
+
+Docusaurus is used to generate the documentation site as a static GitHub pages site.
+This setup is well-supported by GitHub.
+It allows for easy documentation as Markdown files and can also be used to create a blog, which is used to keep track of
+the development progress.
