@@ -1,0 +1,98 @@
+---
+sidebar_position: 2
+title: Technology Stack
+description: Programming languages, frameworks, and tools used in this project
+---
+
+# Technology Stack
+
+This site aims to provide an overview of the technology stack used in this project.
+You will find information about the programming languages, frameworks, and tools used in this project, why they were
+chosen, and how they are used.
+
+## Backend
+
+The backend will be implemented in Java using the Spring Boot framework.
+The backend will implement a REST API with CRUD operations.
+
+> *Why Java?* Java is in the top 6 most popular programming languages based on the
+> [GitHub Octoverse 2026](https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/#h-language-choice-has-new-influence)
+> and [GitHub innovations report](https://innovationgraph.github.com/global-metrics/programming-languages).
+
+> **Why Spring Boot?** Spring Boot is a popular framework for building web applications and microservices in Java.
+> The second choice was Micronaut, which is a low-memory, fast, and modular framework for building microservices and
+> serverless applications in Java.
+> Based on the [Netguru Java backend framework comparison](https://www.netguru.com/blog/java-backend-frameworks), Spring
+> Boot is the most popular one.
+> The project sponsor is interested in open-source software, so the decision was made to use Spring Boot as it is more
+> popular and has a larger community, which means more support and resources are available.
+
+The backend will implement the MVC pattern.
+The view layer is the REST API, which will be consumed by the frontend.
+
+Authentication and authorization will be implemented using Spring Security.
+The sponsor is interested in using his Apple ID for authentication, which is explained in this
+[Medium article](https://medium.com/@olalekanamoo128/implementing-apple-authentication-sign-in-with-spring-boot-826e6752bd10).
+
+## Database
+
+As database management system, PostgreSQL will be used.
+
+> *Why PostgreSQL?* PostgreSQL is a popular choice for web applications and has a large community of developers.
+> The [Stack Overflow Developer Survey 2026](https://survey.stackoverflow.co/2026/technology/data/databases) shows that
+> PostgreSQL is the most popular database management system among developers, with 58% of respondents using it.
+
+[PostgreSQL supports row-level security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html), which allows for
+fine-grained access control to the data and could become a crucial part of the multi-tenant architecture in the future.
+
+## Frontend
+
+The frontend will be implemented in TypeScript using the React framework.
+
+Vite will be used as the build tool and development server.
+
+Tailwind CSS will be used as the CSS framework.
+It is a modern CSS framework that allows for rapid development of responsive and customizable user interfaces.
+[tailwindcss.com](https://tailwindcss.com/)
+
+## Documentation
+
+Docusaurus is used to generate the documentation site as a static GitHub pages site.
+This setup is well-supported by GitHub.
+It allows for easy documentation as Markdown files and can also be used to create a blog, which is used to keep track of
+the development progress.
+
+## Deployment
+
+The backend will be shipped as a Docker container.
+
+PostgreSQL provides a Docker image that can be used to run the database in a Docker container.
+
+For the frontend, multiple options are available:
+- build the frontend as a static site and use a hosting provider to host the static files
+  > This depends on the hosting provider and the features they provide.
+  > This approach has the disadvantage that it becomes more difficult for other companies to host the frontend
+  > themselves, as they would need to set up a hosting provider and configure it to serve the static files.
+- build the frontend as a static site and use a Docker container to serve the static files
+  > This approach has the advantage that it is easier for other companies to host the frontend themselves, as they would
+  > only need to set up a hosting provider and configure it to run the Docker container.
+- run the frontend as a Docker container based on NodeJS and use a hosting provider to host the Docker container
+  > This approach has the advantage that it is easier for other companies to host the frontend themselves, as they would
+  > only need to set up a hosting provider and configure it to run the Docker container.
+  > The disadvantage is that it requires more resources to run a Docker container than to serve static files.
+
+The second approach is the best and most flexible option.
+
+The three Docker containers (backend, database, and frontend) will be orchestrated using Kubernetes.
+A development environment will be set up in the future.
+This hardly depends on the hosting provider and the features they provide (e.g., managed Kubernetes, VMs).
+
+### GitHub Actions
+
+A few GitHub Actions are required:
+- build and dockerize the backend and frontend
+- create a release and tag the repository
+- build and push the Docker images to a container registry (e.g., GitHub Container Registry)
+- deploy the Docker containers to the hosting provider (e.g., AWS, Azure, GCP, DigitalOcean)
+- run tests and check code quality
+- run security checks (Dependabot)
